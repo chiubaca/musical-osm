@@ -36,15 +36,20 @@ const playRandomNote = () => {
  */
 const newChangeSetCallBack = (changeset) => {
   const {
-    id, numChanges, user, userId, center, comment,
+    numChanges, user, center, comment,
   } = changeset;
 
   const icon = L.divIcon({
-    className: 'custom-div-icon',
-    html: "<div class='ripple'><div></div><div></div></div>",
+    className: 'ripple',
+    html: '<div><div></div><div></div></div>',
   });
 
-  L.marker(center, { icon }).addTo(map);
+  const marker = L.marker(center, { icon })
+    .bindPopup(`${user} - ${comment} (${numChanges} changes)`)
+    .addEventListener('mouseover', () => marker.togglePopup())
+    .addEventListener('mouseout', () => marker.togglePopup())
+    .addTo(map);
+
   playRandomNote();
 };
 
