@@ -1,5 +1,9 @@
-import Pako from 'pako';
+/**
+ * Full credits to James Westman 
+ * https://gitlab.com/jwestman/osm-in-realtime/-/blob/master/src/service.jsx
+ */
 
+import Pako from 'pako';
 
 const MIRROR = "https://planet.openstreetmap.org";
 const MINUTE = 60000;
