@@ -3,6 +3,19 @@ import L from "leaflet"
 import "leaflet/dist/leaflet.css"
 import './style.css'
 
+// https://codepen.io/teropa/pen/mBbPEe
+const SCALE = [
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-G2.mp3'),
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-A2.mp3'),
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-C3.mp3'),
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-D3.mp3'),
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-E3.mp3'),
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-E4.mp3'),
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-G3.mp3'),
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-A3.mp3'),
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-C4.mp3'),
+  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-D4.mp3'),
+];
 
 function main() {
   let map;
@@ -14,34 +27,17 @@ function main() {
       maxZoom: 18,
     }).addTo(map)
 
-    let icon = L.divIcon({
-      className: 'custom-div-icon',
-      html: "<div class='ripple'><div></div><div></div></div>",
-      iconSize: [30, 42],
-      iconAnchor: [15, 42]
-    });
-
-    map.addEventListener('click', (e) => {
-      console.log(e)
-      let icon = L.divIcon({
-        className: 'custom-div-icon',
-        html: "<div class='ripple'><div></div><div></div></div>",
-      });
-      L.marker([e.latlng.lat, e.latlng.lng], { icon: icon }).addTo(map)
-    })
-
     function callback(data) {
 
       const { id, numChanges, user, userId, center, comment } = data
-      // console.log("callback function being run", data)
-      console.log("callback function being run", center)
+
       let icon = L.divIcon({
         className: 'custom-div-icon',
         html: "<div class='ripple'><div></div><div></div></div>",
       });
 
       L.marker(center, { icon: icon }).addTo(map);
-      // L.marker(center).addTo(map)
+      SCALE[Math.floor(Math.random() * SCALE.length)].play()
     }
 
     const service = new Service()
@@ -53,6 +49,5 @@ function main() {
     console.log('Dom loading...')
   }
 }
-
 
 main()
