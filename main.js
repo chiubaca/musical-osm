@@ -41,7 +41,7 @@ const newChangeSetCallBack = (changeset) => {
 
   const icon = L.divIcon({
     className: 'ripple',
-    html: '<div><div></div><div></div></div>',
+    html: '<div><div class="ring"></div><div class="ring"></div><div class="point"></div></div>',
   });
 
   const marker = L.marker(center, { icon })

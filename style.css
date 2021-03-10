@@ -16,15 +16,15 @@ html * {
 
 
 /* https://loading.io/css/ */
-.ripple div {
+.ripple .ring {
   position: absolute;
   border: 2px solid rgba(255, 255, 255, 0.39);
-  opacity: 1;
+  opacity: 0;
   border-radius: 50%;
   animation: ripple 3s cubic-bezier(0, 0.2, 0.8, 1);
 }
-.ripple div:nth-child(2) {
-  animation-delay: -1s;
+.ripple .ring:nth-child(2) {
+  animation-delay: -0.5s;
 }
 @keyframes ripple {
   0% {
@@ -41,4 +41,17 @@ html * {
     height: 72px;
     opacity: 0;
   }
+}
+
+.point {
+  height: 5px;
+  width: 5px;
+  background-color: rgba(255, 255, 255, 0.473);
+  border-radius: 50%;
+ animation: fadein 2s;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
