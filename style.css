@@ -14,8 +14,19 @@ html * {
 
 #mapid { height: 100vh; }
 
+#info-feed {
+  position: absolute;
+  left : 10px;
+  bottom: 10px;
+  z-index: 401;
+  color: aliceblue;
+}
 
-/* https://loading.io/css/ */
+.change-info{
+  animation: fadein 1s;
+}
+
+/* Adapted from https://loading.io/css/ */
 .ripple .ring {
   position: absolute;
   border: 2px solid rgba(255, 255, 255, 0.39);
@@ -42,15 +53,13 @@ html * {
     opacity: 0;
   }
 }
-
 .point {
   height: 5px;
   width: 5px;
   background-color: rgba(255, 255, 255, 0.473);
   border-radius: 50%;
- animation: fadein 2s;
+  animation: fadein 2s;
 }
-
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }

@@ -32,6 +32,16 @@ const playRandomNote = () => {
 };
 
 /**
+ * Adds details of the OSM chageset to the info feed
+ */
+const addToInfoFeed = (changsetDetails) => {
+  const { user, comment, numChanges } = changsetDetails;
+  document.querySelector('#info-feed').innerHTML = `
+  <span class='change-info'> ${user} - ${comment} (${numChanges} changes) </span>
+`;
+};
+
+/**
  * Callback function for OSM service. Runs whenever a new changeset is added
  */
 const newChangeSetCallBack = (changeset) => {
@@ -49,7 +59,7 @@ const newChangeSetCallBack = (changeset) => {
     .addEventListener('mouseover', () => marker.togglePopup())
     .addEventListener('mouseout', () => marker.togglePopup())
     .addTo(map);
-
+  addToInfoFeed(changeset);
   playRandomNote();
 };
 
