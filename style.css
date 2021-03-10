@@ -11,6 +11,14 @@ html * {
   text-align: center;
   color: #2c3e50;
 }
+#title { 
+  position: absolute;
+  top : 10px;
+  left : 20px;
+  z-index: 402;
+  color: aliceblue;
+}
+
 
 #mapid { height: 100vh; }
 
