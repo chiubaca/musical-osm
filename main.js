@@ -1,10 +1,12 @@
-import Service from "./service"
-import L from "leaflet"
-import "leaflet/dist/leaflet.css"
-import './style.css'
+import L from 'leaflet';
+import Service from './service';
+import 'leaflet/dist/leaflet.css';
+import './style.css';
 
-// https://codepen.io/teropa/pen/mBbPEe
-const SCALE = [
+/**
+ * Nice sounding chords taken from https://codepen.io/teropa/pen/mBbPEe
+ */
+const SCALES = [
   new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-G2.mp3'),
   new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-A2.mp3'),
   new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-C3.mp3'),
@@ -17,37 +19,59 @@ const SCALE = [
   new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-D4.mp3'),
 ];
 
-function main() {
-  let map;
-  if (document.readyState != 'loading') {
-    console.log('dom ready');
-    map = L.map('mapid').setView([30.0, 0.0], 2);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 18,
-    }).addTo(map)
+/**
+ * Leaflet map
+ */
+let map;
 
-    function callback(data) {
+/**
+ * Plays a a random chord
+ */
+const playRandomNote = () => {
+  SCALES[Math.floor(Math.random() * SCALES.length)].play();
+};
 
-      const { id, numChanges, user, userId, center, comment } = data
+/**
+ * Callback function for OSM service. Runs whenever a new changeset is added
+ */
+const newChangeSetCallBack = (changeset) => {
+  const {
+    id, numChanges, user, userId, center, comment,
+  } = changeset;
 
-      let icon = L.divIcon({
-        className: 'custom-div-icon',
-        html: "<div class='ripple'><div></div><div></div></div>",
-      });
+  const icon = L.divIcon({
+    className: 'custom-div-icon',
+    html: "<div class='ripple'><div></div><div></div></div>",
+  });
 
-      L.marker(center, { icon: icon }).addTo(map);
-      SCALE[Math.floor(Math.random() * SCALE.length)].play()
-    }
+  L.marker(center, { icon }).addTo(map);
+  playRandomNote();
+};
 
-    const service = new Service()
-    service.register(callback)
-    service.start()
+/**
+ * Main app logic
+ */
+const main = () => {
+  if (document.readyState !== 'loading') {
+    map = L.map('mapid', { zoomControl: false }).setView([30.0, 0.0], 2);
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      {
+        attribution:
+          '<a href="https://twitter.com/chiubaca">@chiubaca</a> | &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      },
+    ).addTo(map);
 
-
+    // Create a the OSM service which polls OSM for new changesets
+    const service = new Service();
+    // Register a callback function which will be executed every time a new OSM edit is detected.
+    service.register(newChangeSetCallBack);
+    // Initialises the polling service.
+    service.start();
   } else {
-    console.log('Dom loading...')
+    console.error('DOM not ready');
   }
-}
+};
 
-main()
+main();
