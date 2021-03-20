@@ -1,5 +1,5 @@
 import L from 'leaflet';
-import Service from './service';
+import Service, { ChangeSet } from './service';
 import 'leaflet/dist/leaflet.css';
 import './style.css';
 
@@ -44,7 +44,7 @@ const addToInfoFeed = (changsetDetails) => {
 /**
  * Callback function for OSM service. Runs whenever a new changeset is added
  */
-const newChangeSetCallBack = (changeset) => {
+const newChangeSetCallBack = (changeset: ChangeSet) => {
   const {
     numChanges, user, center, comment,
   } = changeset;
