@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import Service, { ChangeSet } from './service';
 import 'leaflet/dist/leaflet.css';
-import './style.css';
+import './style.scss';
 
 /**
  * Nice sounding chords taken from https://codepen.io/teropa/pen/mBbPEe
