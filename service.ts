@@ -4,14 +4,22 @@
  */
 
 import Pako from 'pako';
+export interface ChangeSet {
+  id: string;
+  numChanges: string;
+  user: string;
+  userId: string;
+  center: number[];
+  bbox: number[][];
+  comment: string;
+}
+
+export interface CallbackFunction { (ChangeSet): void }
 
 const MIRROR = 'https://planet.openstreetmap.org';
 const MILLISECS = 60000;
-
-interface CallbackFunction { (): void }
-
 export default class Service {
-  private _callbacks: any[];
+  private _callbacks: CallbackFunction[];
   private _timeout: undefined | ReturnType<typeof setTimeout>;
   private _sequence: number;
   private _baseTime: number;
@@ -26,11 +34,11 @@ export default class Service {
    * Multiple number of callbacks can be registered. They will be executed in the order they are registered
    * @param cb 
    */
-  protected register(cb: CallbackFunction) {
+  public register(cb: { (changeset): void }) {
     this._callbacks.push(cb);
   }
 
-  unregister(cb) {
+  public unregister(cb) {
     let index;
     while ((index = this._callbacks.indexOf(cb)) !== -1) {
       this._callbacks.splice(index, 1);
@@ -43,7 +51,7 @@ export default class Service {
    * 
    * @returns void
    */
-  protected async start() {
+  public async start() {
 
     const response = await fetch(`${MIRROR}/replication/changesets/state.yaml`);
 
@@ -61,7 +69,7 @@ export default class Service {
     this._onTimeout();
   }
 
-  protected stop() {
+  stop() {
     if (this._timeout !== undefined) {
       clearTimeout(this._timeout);
       this._timeout = undefined;
@@ -132,7 +140,7 @@ export default class Service {
         // so empty changesets are apparently a thing we have to handle gracefully
         if (!minlat) continue;
 
-        const changeset = {
+        const changeset: ChangeSet = {
           id: element.getAttribute('id'),
           numChanges: element.getAttribute('num_changes'),
           user: element.getAttribute('user'),
@@ -157,7 +165,7 @@ export default class Service {
    * Run any callback functions
    * @param changeset {function}
    */
-  private _addChangeset(changeset) {
+  private _addChangeset(changeset: ChangeSet) {
     for (const callback of this._callbacks) {
       callback(changeset);
     }
