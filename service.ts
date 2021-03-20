@@ -1,10 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-continue */
-/* eslint-disable no-cond-assign */
-/* eslint-disable radix */
-/* eslint-disable no-plusplus */
-
 /**
  * Adapted from code written by James Westman:
  * https://gitlab.com/jwestman/osm-in-realtime/-/blob/master/src/service.jsx
@@ -15,7 +8,7 @@ import Pako from 'pako';
 const MIRROR = 'https://planet.openstreetmap.org';
 const MILLISECS = 60000;
 
-interface CallbackFunction {():void}
+interface CallbackFunction { (): void }
 
 export default class Service {
   private _callbacks: any[];
@@ -88,7 +81,7 @@ export default class Service {
       .substr(-9)
       .replace(/(\d{3})/g, '$1/')
       .replace(/\/$/, '');
-    
+
     //fetch the corresponding changeset .gz based on the sequence number 
     const response = await fetch(
       `${MIRROR}/replication/changesets/${seq}.osm.gz`,
@@ -108,16 +101,16 @@ export default class Service {
     this._baseTime += MILLISECS;
   }
 
-/**
- * Parses the OSM changeset and scans the XML for changeset which has a 'closed_at' attribuite. I assume this indicates 
- * That the OSM edit has been commited. 
- * 
- * For each commited change that is identified, a small payload is generated with metadata about the edit which is
- * passed over into a setTimeout with slight delay determined by the current sequence - the of the commited changeset. 
- * 
- * @param xml {string} - xml changeset from OSM
- *                       example payload: https://planet.openstreetmap.org/replication/changesets/004/373/632.osm.gz
- */
+  /**
+   * Parses the OSM changeset and scans the XML for changeset which has a 'closed_at' attribuite. I assume this indicates 
+   * That the OSM edit has been commited. 
+   * 
+   * For each commited change that is identified, a small payload is generated with metadata about the edit which is
+   * passed over into a setTimeout with slight delay determined by the current sequence - the of the commited changeset. 
+   * 
+   * @param xml {string} - xml changeset from OSM
+   *                       example payload: https://planet.openstreetmap.org/replication/changesets/004/373/632.osm.gz
+   */
   private _parseChangesets(xml: string) {
     // use the DOMParser to read the contents of the XML file
     const parser = new DOMParser();
@@ -126,7 +119,7 @@ export default class Service {
     // Only interested in the changeset tags
     const changesets = xmlDoc.getElementsByTagName('changeset');
     for (const element of changesets) {
-      
+
       if (element.hasAttribute('closed_at')) {
 
         const commentTag = element.querySelector('tag[k="comment"]');
