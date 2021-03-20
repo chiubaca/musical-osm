@@ -22,7 +22,7 @@ html * {
 #info-button { 
   position: absolute;
   top : 10px;
-  right : 20px;
+  right : 10px;
   z-index: 999;
   text-decoration: none;
 }
@@ -45,7 +45,8 @@ html * {
     pointer-events: auto;
   }
   & > div {
-    width: 400px;
+    max-width: 900px;
+    min-width: 200px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -82,7 +83,7 @@ html * {
 #info-feed {
   position: absolute;
   left : 10px;
-  bottom: 10px;
+  bottom: 50px;
   z-index: 401;
   color: aliceblue;
 }
