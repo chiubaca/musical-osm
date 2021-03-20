@@ -17,7 +17,7 @@ export interface ChangeSet {
 export interface CallbackFunction { (ChangeSet): void }
 
 const MIRROR = 'https://planet.openstreetmap.org';
-const MILLISECS = 60000;
+const ONE_MIN = 60000;
 export default class Service {
   private _callbacks: CallbackFunction[];
   private _timeout: undefined | ReturnType<typeof setTimeout>;
@@ -65,7 +65,9 @@ export default class Service {
     this._sequence = parseInt(text.match(/sequence: (\d+)/)[1]) + 1;
     // Extract and covert the date from the YAML and convert to a UNIX timestamp
     const dateText = text.match(/last_run: ([\d-]+ [\d:]+)/)[1].replace(' ', 'T');
-    this._baseTime = Date.parse(dateText) - MILLISECS;
+
+    // Offset the base time by one minute. This throttles how quickly the edits appear on the map 🤷‍♂️
+    this._baseTime = Date.parse(dateText) - ONE_MIN;
     this._onTimeout();
   }
 
@@ -78,10 +80,11 @@ export default class Service {
   /**
    *  Utilises the sequence number to fetch the a payload of current OSM changesets.
    *  Method recursively calls itself whilst indefinitely until unregister() explicity called.
+   *  After each run the the sequence is increment by one so a new batch of OSM changeset are retrieved.
    */
   private async _onTimeout() {
     // Recursively run this self for every 
-    this._timeout = setTimeout(this._onTimeout.bind(this), MILLISECS);
+    this._timeout = setTimeout(this._onTimeout.bind(this), ONE_MIN);
 
     // The OSM sequence can be translated into the corresponding URL path 
     // e.g "/replication/changesets/004/365/130"
@@ -100,13 +103,10 @@ export default class Service {
     }
     // Extract the XML from the .gz file
     const xml = Pako.inflate(await response.arrayBuffer(), { to: 'string' });
-
     // Parse the XML and run any attached callback functions
     this._parseChangesets(xml);
-
-
     this._sequence++;
-    this._baseTime += MILLISECS;
+    this._baseTime += ONE_MIN;
   }
 
   /**
@@ -153,10 +153,10 @@ export default class Service {
           comment,
         };
 
-        // An offset time is generate based the last generated sequence time - current change commited time.
+        // An offset time is generate based the last generated sequence time - current change committed time.
         // This produced the feel that the data is being streamed in at realtime.
-        const time = Date.parse(element.getAttribute('closed_at'));
-        const offset = time - this._baseTime;
+        const timeOfEdit = Date.parse(element.getAttribute('closed_at'));
+        const offset = timeOfEdit - this._baseTime;
         setTimeout(this._addChangeset.bind(this, changeset), offset);
       }
     }
