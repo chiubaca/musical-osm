@@ -42,7 +42,7 @@ const addToInfoFeed = (changsetDetails) => {
 };
 
 /**
- * Callback function for OSM service. Runs whenever a new changeset is added
+ * Callback function which runs on every OSM changeset that is added.
  */
 const newChangeSetCallBack = (changeset: ChangeSet) => {
   const {
