@@ -155,7 +155,7 @@ export default class Service {
 
         // An offset time is generate based the last generated sequence time - current change committed time.
         // This produced the feel that the data is being streamed in at realtime.
-        const timeOfEdit = Date.parse(element.getAttribute('closed_at'));
+        const timeOfEdit = Date.parse(element.getAttribute('closed_at').replace(/Z$/, ''),);
         const offset = timeOfEdit - this._baseTime;
         setTimeout(this._addChangeset.bind(this, changeset), offset);
       }
