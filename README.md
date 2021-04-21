@@ -3,7 +3,9 @@
   <p> 🎶 The sound of OSM edits </p> 
 </div>
 
-A data visualisation that explores the use of music and geography. Heavily inspired by [Trams of Helsinki](https://codepen.io/teropa/full/mBbPEe) by Tero Parviainen.
+A data visualisation that explores the use of music and geography. Whenever a new [Open Street Map edit](https://www.openstreetmap.org/) has been commited, a relaxing chime sounds and the location is pinpointed on the map.
+
+Heavily inspired by [Trams of Helsinki](https://codepen.io/teropa/full/mBbPEe) by Tero Parviainen.
 
 [Live app](https://musical-osm.netlify.app/)
 
