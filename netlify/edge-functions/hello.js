@@ -1,6 +1,5 @@
 export default async () => {
-
-  const MIRROR = 'https://planet.openstreetmap.org';
+  const MIRROR = "https://planet.openstreetmap.org";
 
   const response = await fetch(`${MIRROR}/replication/changesets/state.yaml`);
 
@@ -9,11 +8,10 @@ export default async () => {
     return;
   }
 
-  
   const text = await response.text();
-  console.log("🚀 ~ text:", text)
-  
-  
-  return new Response(text)};
+  console.log("🚀 ~ text:", text);
+
+  return new Response(text);
+};
 
 export const config = { path: "/test" };
