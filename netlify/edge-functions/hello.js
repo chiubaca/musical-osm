@@ -14,6 +14,6 @@ export default async () => {
   console.log("🚀 ~ text:", text)
   
   
-  return new Response("Hello world")};
+  return new Response(text)};
 
 export const config = { path: "/test" };
