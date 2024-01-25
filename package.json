@@ -2,7 +2,7 @@
   "name": "musical-osm",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --port=5173",
+    "dev": "vite ./src --port=5173",
     "netlify:dev": "netlify dev",
     "build": "vite build",
     "serve": "vite preview"
