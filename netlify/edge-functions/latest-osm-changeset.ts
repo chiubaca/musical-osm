@@ -24,6 +24,15 @@ const extractSequenceNumber = (text: string) => {
   return sequenceNumber;
 };
 
+const extractDate = (text: string) => {
+
+  const extractedDateText = text.match(/last_run: ([\d-]+ [\d:]+)/)
+
+  if (!extractedDateText) return null
+
+  return Date.parse(extractedDateText[1].replace(' ', 'T'))
+};
+
 /**
  * Create the OSM sequence path
  * e.g "004/365/130"
@@ -45,7 +54,7 @@ const parseChangesets = (xml: string) => {
   const parser = new htmlparser2.Parser({
     onopentag(name, attributes) {
       if (name === 'changeset') {
-        const changeset = { changeset: attributes }
+        const changeset = { ...attributes }
         // TODO: figure out how to also include children tags inside changeset 
         data.push(changeset)
       }
@@ -70,7 +79,11 @@ export default async (_req: Request, _context: Context) => {
 
   const text = await osmStateResp.text();
 
+
   const sequenceNumber = extractSequenceNumber(text);
+
+  const stateDate = extractDate(text);
+
 
   const osmChangesetPath = createChangesetPath(sequenceNumber);
 
@@ -86,9 +99,11 @@ export default async (_req: Request, _context: Context) => {
 
 
   const xml: string = Pako.inflate(await changesetResp.arrayBuffer(), { to: 'string' });
-  const data = parseChangesets(xml)
+  const changesets = parseChangesets(xml)
 
-  return new Response(data);
+  const respBody = { sequenceNumber, stateDate, changesets }
+
+  return new Response(JSON.stringify(respBody));
 };
 
 export const config: Config = { path: "/latest-osm-changeset" };

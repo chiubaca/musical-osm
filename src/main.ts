@@ -2,6 +2,7 @@ import L from 'leaflet';
 import Service, { ChangeSet } from './service';
 import 'leaflet/dist/leaflet.css';
 import './style.scss';
+import { ChangeSetResp, Changeset } from './common/types';
 
 /**
  * Nice sounding chords taken from https://codepen.io/teropa/pen/mBbPEe
@@ -18,6 +19,8 @@ const SCALES = [
   new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-C4.mp3'),
   new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-D4.mp3'),
 ];
+
+const ONE_MIN = 60000;
 
 /**
  * Leaflet map
@@ -44,9 +47,9 @@ const addToInfoFeed = (changsetDetails) => {
 /**
  * Callback function which runs on every OSM changeset that is added.
  */
-const newChangeSetCallBack = (changeset: ChangeSet) => {
+const newChangeSetCallBack = (changeset: Changeset) => {
   const {
-    numChanges, user, center, comment,
+    user, min_lat, max_lon, num_changes
   } = changeset;
 
   const icon = L.divIcon({
@@ -54,19 +57,19 @@ const newChangeSetCallBack = (changeset: ChangeSet) => {
     html: '<div><div class="ring"></div><div class="ring"></div><div class="point"></div></div>',
   });
 
-  const marker = L.marker(center, { icon })
-    .bindPopup(`${user} - ${comment} (${numChanges} changes)`)
+  const marker = L.marker([min_lat, max_lon], { icon })
+    .bindPopup(`${user} - (${num_changes} changes)`)
     .addEventListener('mouseover', () => marker.togglePopup())
     .addEventListener('mouseout', () => marker.togglePopup())
     .addTo(map);
-  addToInfoFeed(changeset);
+  // addToInfoFeed(changeset);
   playRandomNote();
 };
 
 /**
  * Main app logic
  */
-const main = () => {
+const main = async () => {
   if (document.readyState !== 'loading') {
     map = L.map('mapid', { zoomControl: false }).setView([30.0, 0.0], 2);
     L.tileLayer(
@@ -78,12 +81,58 @@ const main = () => {
       },
     ).addTo(map);
 
-    // Create a the OSM service which polls OSM for new changesets
-    const service = new Service();
-    // Register a callback function which will be executed every time a new OSM edit is detected.
-    service.register(newChangeSetCallBack);
-    // Initialises the polling service.
-    service.start();
+
+    const resp = await fetch("/latest-osm-changeset");
+    const data: ChangeSetResp = await resp.json();
+    console.log("🚀 intial data", data)
+
+    const baseTime = new Date(data.changesets[0].created_at).getTime()
+
+
+    for (const c of data.changesets) {
+
+      const offset = (new Date(c.created_at).getTime() - baseTime) / 250
+      console.log("🚀 settings intervals to play at mins: ", (offset / 1000) / 60)
+
+
+
+
+      setTimeout(() => {
+
+        newChangeSetCallBack(c)
+
+      }, offset);
+    }
+
+
+
+    setTimeout(async () => {
+
+      console.log('fetching next changeset..')
+
+      const resp = await fetch("/latest-osm-changeset");
+      const data: ChangeSetResp = await resp.json();
+      console.log("🚀 ~ setTimeout ~ data:", data)
+
+      for (const c of data.changesets) {
+
+        const offset = new Date(c.created_at).getTime() - baseTime;
+        console.log("🚀 settings intervals to play at mins: ", (offset / 1000) / 60)
+
+
+
+
+        setTimeout(() => {
+
+          newChangeSetCallBack(c)
+
+        }, offset);
+      }
+
+    }, ONE_MIN);
+
+
+
   } else {
     console.error('DOM not ready');
   }
