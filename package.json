@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite ./src --port=5173",
     "netlify:dev": "netlify dev",
-    "build": "vite build ./src --outDir=../dist",
+    "build": "vite build ./src --outDir=../dist --emptyOutDir",
     "serve": "vite preview"
   },
   "devDependencies": {
