@@ -1,5 +1,4 @@
 import L from 'leaflet';
-import Service, { ChangeSet } from './service';
 import 'leaflet/dist/leaflet.css';
 import './style.scss';
 import { ChangeSetResp, Changeset } from './common/types';
