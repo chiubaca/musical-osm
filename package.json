@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@netlify/edge-functions": "^2.3.0",
+    "htmlparser2": "^9.1.0",
     "leaflet": "^1.7.1",
     "pako": "^2.0.3"
   }
