@@ -1,5 +1,6 @@
 {
   "name": "musical-osm",
+  "license": "MIT",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite ./src --port=5173",
@@ -14,6 +15,7 @@
     "vite": "^5.0.11"
   },
   "dependencies": {
+    "@netlify/edge-functions": "^2.3.0",
     "leaflet": "^1.7.1",
     "pako": "^2.0.3"
   }
