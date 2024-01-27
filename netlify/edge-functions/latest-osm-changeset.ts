@@ -20,7 +20,7 @@ const extractSequenceNumber = (text: string) => {
 
   // why do we increment by 1?
   const sequenceNumber = parseInt(extractedString[1]) + 1;
-  console.log("🚀 ~ _sequence:", sequenceNumber);
+
   return sequenceNumber;
 };
 
@@ -43,7 +43,6 @@ const createChangesetPath = (sequence) => {
     .replace(/(\d{3})/g, "$1/")
     .replace(/\/$/, "");
 
-  console.log("🚀 ~ convertSequenceNumberToOsmPath ~ seq:", seq);
   return seq;
 };
 

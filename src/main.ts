@@ -36,10 +36,10 @@ const playRandomNote = () => {
 /**
  * Adds details of the OSM chageset to the info feed
  */
-const addToInfoFeed = (changsetDetails) => {
-  const { user, comment, numChanges } = changsetDetails;
+const addToInfoFeed = (changsetDetails: Changeset) => {
+  const { user, num_changes, closed_at } = changsetDetails;
   document.querySelector('#info-feed').innerHTML = `
-  <span class='change-info'> ${user} - ${comment} (${numChanges} changes) </span>
+  <span class='change-info'> ${user} (${num_changes} changes) - ${new Date(closed_at)} </span>
 `;
 };
 
@@ -61,15 +61,41 @@ const newChangeSetCallBack = (changeset: Changeset) => {
     .addEventListener('mouseover', () => marker.togglePopup())
     .addEventListener('mouseout', () => marker.togglePopup())
     .addTo(map);
-  // addToInfoFeed(changeset);
+
+  addToInfoFeed(changeset);
   playRandomNote();
 };
+
+
+const getData = async () => {
+
+  const resp = await fetch("/latest-osm-changeset");
+  const data: ChangeSetResp = await resp.json();
+  console.log("🚀 intial data", data)
+
+  const baseTime = new Date(data.changesets[0].created_at).getTime()
+
+
+  for (const c of data.changesets) {
+
+    const offset = (new Date(c.created_at).getTime() - baseTime) / 250
+    console.log("🚀 settings intervals to play at mins: ", (offset / 1000) / 60)
+
+
+    setTimeout(() => {
+
+      newChangeSetCallBack(c)
+
+    }, offset);
+  }
+}
 
 /**
  * Main app logic
  */
 const main = async () => {
   if (document.readyState !== 'loading') {
+
     map = L.map('mapid', { zoomControl: false }).setView([30.0, 0.0], 2);
     L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
@@ -81,54 +107,17 @@ const main = async () => {
     ).addTo(map);
 
 
-    const resp = await fetch("/latest-osm-changeset");
-    const data: ChangeSetResp = await resp.json();
-    console.log("🚀 intial data", data)
-
-    const baseTime = new Date(data.changesets[0].created_at).getTime()
-
-
-    for (const c of data.changesets) {
-
-      const offset = (new Date(c.created_at).getTime() - baseTime) / 250
-      console.log("🚀 settings intervals to play at mins: ", (offset / 1000) / 60)
+    console.log(' get initial data..');
+    getData()
 
 
 
-
-      setTimeout(() => {
-
-        newChangeSetCallBack(c)
-
-      }, offset);
-    }
-
-
-
-    setTimeout(async () => {
+    setInterval(async () => {
 
       console.log('fetching next changeset..')
+      getData()
 
-      const resp = await fetch("/latest-osm-changeset");
-      const data: ChangeSetResp = await resp.json();
-      console.log("🚀 ~ setTimeout ~ data:", data)
-
-      for (const c of data.changesets) {
-
-        const offset = new Date(c.created_at).getTime() - baseTime;
-        console.log("🚀 settings intervals to play at mins: ", (offset / 1000) / 60)
-
-
-
-
-        setTimeout(() => {
-
-          newChangeSetCallBack(c)
-
-        }, offset);
-      }
-
-    }, ONE_MIN);
+    }, ONE_MIN / 2);
 
 
 
