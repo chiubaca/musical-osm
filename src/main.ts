@@ -39,7 +39,7 @@ const playRandomNote = () => {
 const addToInfoFeed = (changsetDetails: Changeset) => {
   const { user, num_changes, closed_at } = changsetDetails;
   document.querySelector('#info-feed').innerHTML = `
-  <span class='change-info'> ${user} (${num_changes} changes) - ${new Date(closed_at)} </span>
+  <span class='change-info'> ${user} (${num_changes} changes) - ${closed_at && new Date(closed_at)} </span>
 `;
 };
 
@@ -71,21 +71,29 @@ const getData = async () => {
 
   const resp = await fetch("/latest-osm-changeset");
   const data: ChangeSetResp = await resp.json();
-  console.log("🚀 intial data", data)
 
-  const baseTime = new Date(data.changesets[0].created_at).getTime()
+  const sortedClosedChangesets = data.changesets.filter(changeset => changeset.closed_at).sort((a, b) => {
+
+    if (!a?.closed_at || !b?.closed_at) return;
+
+    const aClosedAt = new Date(a.closed_at).getTime();
+    const bClosedAt = new Date(b.closed_at).getTime();
+    return aClosedAt - bClosedAt;
+
+  })
 
 
-  for (const c of data.changesets) {
+  const baseTime = new Date(sortedClosedChangesets[0]?.closed_at || 0).getTime()
 
-    const offset = (new Date(c.created_at).getTime() - baseTime) / 250
-    console.log("🚀 settings intervals to play at mins: ", (offset / 1000) / 60)
+  for (const changeset of sortedClosedChangesets) {
 
+    if (!changeset?.closed_at) return
+
+    const offset = (new Date(changeset.closed_at).getTime() - baseTime)
+    // console.log("🚀 settings intervals to play at mins: ", (offset / 1000) / 60)
 
     setTimeout(() => {
-
-      newChangeSetCallBack(c)
-
+      newChangeSetCallBack(changeset)
     }, offset);
   }
 }
