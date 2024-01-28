@@ -1,33 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <title>Musical OSM</title>
-  </head>
-  <body>
-    <main id="app">
-       <div id="mapid">
-        <h1 id="title">Musical  OSM</h1>
-          <a id="info-button" href="#open-modal">❔</a>
-          <div id="open-modal" class="modal-window">
-            <div>
-              <a href="#" title="Close" class="modal-close">Close</a>
-              <h2>What is this?</h2>
-              <span>This map shows the location of when someone has made a map edit to OSM and plays a relaxing chime. Enjoy</span>
-              <br/>
-              <span>Open Street Map is community of mappers that are working together to digitise the world.</span>
-              <br/>
-              <a href="https://www.openstreetmap.org/about">Learn more about OSM</a> |
-              <a target="_blank" href="https://github.com/chiubaca/musical-osm">Source Code</a>
-            </div>
-          </div>    
-         <div id="info-feed"></div>
-       </div>
-    </main>
-    <script type="module" src="/main.ts"></script>
-    <script>if(!sessionStorage.getItem("_swa")&&document.referrer.indexOf(location.protocol+"//"+location.host)!== 0){fetch("https://counter.dev/track?"+new URLSearchParams({referrer:document.referrer,screen:screen.width+"x"+screen.height,user:"chiubaca",utcoffset:"0"}))};sessionStorage.setItem("_swa","1");</script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <meta title="Musical OSM" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Musical OSM</title>
+</head>
+
+<body>
+  <main id="app">
+    <div id="mapid">
+      <h1 id="title">Musical OSM</h1>
+      <a id="info-button" href="#open-modal">❔</a>
+      <div id="open-modal" class="modal-window">
+        <div>
+          <a href="#" title="Close" class="modal-close">Close</a>
+          <h2>What is this?</h2>
+          <span>This map shows the location of when someone has made a map edit
+            to OSM and plays a relaxing chime. Enjoy</span>
+          <br />
+          <span>Open Street Map is community of mappers that are working together
+            to digitise the world.</span>
+          <br />
+          <a href="https://www.openstreetmap.org/about" rel="noopener">Learn more about OSM</a>
+          |
+          <a target="_blank" href="https://github.com/chiubaca/musical-osm" rel="noopener">Source Code</a>
+        </div>
+      </div>
+      <div id="info-feed"></div>
+    </div>
+  </main>
+  <script type="module" src="/main.ts"></script>
+  <script>
+
+    window.location.hash = '#open-modal';
+
+    if (
+      !sessionStorage.getItem("_swa") &&
+      document.referrer.indexOf(location.protocol + "//" + location.host) !==
+      0
+    ) {
+      fetch(
+        "https://counter.dev/track?" +
+        new URLSearchParams({
+          referrer: document.referrer,
+          screen: screen.width + "x" + screen.height,
+          user: "chiubaca",
+          utcoffset: "0",
+        })
+      );
+    }
+    sessionStorage.setItem("_swa", "1");
+  </script>
+</body>
+
 </html>
