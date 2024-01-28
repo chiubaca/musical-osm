@@ -8,7 +8,7 @@ import * as htmlparser2 from "htmlparser2";
  last_run: 2024-01-25 18:57:42.015653000 +00:00
  sequence: 5853276
  ```
- To: `5853277`
+ To: `5853276`
 */
 const extractSequenceNumber = (text: string) => {
 
@@ -18,8 +18,7 @@ const extractSequenceNumber = (text: string) => {
     return null
   }
 
-  // why do we increment by 1?
-  const sequenceNumber = parseInt(extractedString[1]) + 1;
+  const sequenceNumber = parseInt(extractedString[1]);
 
   return sequenceNumber;
 };
