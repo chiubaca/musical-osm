@@ -12,9 +12,9 @@ export interface Changeset {
   num_changes: string
   user: string
   uid: string
-  min_lat: string
-  max_lat: string
-  min_lon: string
-  max_lon: string
+  min_lat: number
+  max_lat: number
+  min_lon: number
+  max_lon: number
   comments_count: string
 }

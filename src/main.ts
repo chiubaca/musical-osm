@@ -24,7 +24,7 @@ const ONE_MIN = 60000;
 /**
  * Leaflet map
  */
-let map;
+let map: L.Map;
 
 /**
  * Plays a a random chord
@@ -34,14 +34,21 @@ const playRandomNote = () => {
 };
 
 /**
- * Adds details of the OSM chageset to the info feed
+ * Adds details of the OSM changeset to the info feed
  */
-const addToInfoFeed = (changsetDetails: Changeset) => {
-  const { user, num_changes, closed_at } = changsetDetails;
-  document.querySelector('#info-feed').innerHTML = `
-  <span class='change-info'> ${user} (${num_changes} changes) - ${closed_at && new Date(closed_at)} </span>
+const addToInfoFeed = (changesetDetails: Changeset) => {
+  const { user, num_changes, closed_at } = changesetDetails;
+
+  const infoFeedElement = document.querySelector("#info-feed")
+
+  if (!infoFeedElement) return;
+
+  infoFeedElement.innerHTML = `
+  <span class='change-info'> ${user} (${num_changes} changes) - ${closed_at ? new Date(closed_at) : ""
+    } </span>  
 `;
 };
+
 
 /**
  * Callback function which runs on every OSM changeset that is added.
@@ -56,7 +63,7 @@ const newChangeSetCallBack = (changeset: Changeset) => {
     html: '<div><div class="ring"></div><div class="ring"></div><div class="point"></div></div>',
   });
 
-  const marker = L.marker([min_lat, max_lon], { icon })
+  const marker: L.Marker = L.marker([min_lat, max_lon], { icon })
     .bindPopup(`${user} - (${num_changes} changes)`)
     .addEventListener('mouseover', () => marker.togglePopup())
     .addEventListener('mouseout', () => marker.togglePopup())
@@ -67,36 +74,40 @@ const newChangeSetCallBack = (changeset: Changeset) => {
 };
 
 
-const getData = async () => {
-
+const getLatestChangeset = async () => {
   const resp = await fetch("/latest-osm-changeset");
   const data: ChangeSetResp = await resp.json();
 
-  const sortedClosedChangesets = data.changesets.filter(changeset => changeset.closed_at).sort((a, b) => {
+  // Filter out any changesets that are still open
+  // Then sort by closed_at date so that the oldest changesets are first
+  const sortedClosedChangesets = data.changesets
+    .filter((changeset) => changeset?.closed_at)
+    .sort((a, b) => {
+      if (!a?.closed_at || !b?.closed_at) return 0;
 
-    if (!a?.closed_at || !b?.closed_at) return;
+      const aClosedAt = new Date(a.closed_at).getTime();
+      const bClosedAt = new Date(b.closed_at).getTime();
 
-    const aClosedAt = new Date(a.closed_at).getTime();
-    const bClosedAt = new Date(b.closed_at).getTime();
-    return aClosedAt - bClosedAt;
+      return aClosedAt - bClosedAt;
+    });
 
-  })
+  // Take the first change to be used as the base time so we can create 
+  // a timing offset for all other relative to this.
+  const baseTime = new Date(
+    sortedClosedChangesets[0]?.closed_at || 0
+  ).getTime();
 
-
-  const baseTime = new Date(sortedClosedChangesets[0]?.closed_at || 0).getTime()
-
+  // Queue up all closed changes to be played in sequence.
   for (const changeset of sortedClosedChangesets) {
+    if (!changeset?.closed_at) return;
 
-    if (!changeset?.closed_at) return
-
-    const offset = (new Date(changeset.closed_at).getTime() - baseTime)
-    // console.log("🚀 settings intervals to play at mins: ", (offset / 1000) / 60)
+    const offset = new Date(changeset.closed_at).getTime() - baseTime;
 
     setTimeout(() => {
-      newChangeSetCallBack(changeset)
+      newChangeSetCallBack(changeset);
     }, offset);
   }
-}
+};
 
 /**
  * Main app logic
@@ -115,18 +126,12 @@ const main = async () => {
     ).addTo(map);
 
 
-    console.log(' get initial data..');
-    getData()
-
-
+    // Get the initial changeset for when the app loads
+    getLatestChangeset()
 
     setInterval(async () => {
-
-      console.log('fetching next changeset..')
-      getData()
-
+      getLatestChangeset()
     }, ONE_MIN / 2);
-
 
 
   } else {
