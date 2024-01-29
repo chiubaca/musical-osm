@@ -8,7 +8,6 @@ html * {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 #title { 
@@ -28,6 +27,7 @@ html * {
 }
 
 .modal-window {
+  text-align: center;
   position: fixed;
   background-color: rgba(255, 255, 255, 0.25);
   top: 0;
@@ -82,14 +82,19 @@ html * {
 
 #info-feed {
   position: absolute;
-  left : 10px;
-  bottom: 50px;
+  left : 20px;
+  bottom: 20px;
   z-index: 401;
   color: aliceblue;
+
+  a {
+    color: white;
+  }
 }
 
 .change-info{
   animation: fadein 1s;
+  text-align: start;
 }
 
 /* Adapted from https://loading.io/css/ */

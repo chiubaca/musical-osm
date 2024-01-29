@@ -35,15 +35,24 @@ const playRandomNote = () => {
  * Adds details of the OSM changeset to the info feed
  */
 const addToInfoFeed = (changesetDetails: Changeset) => {
-  const { user, num_changes, closed_at } = changesetDetails;
+  const { user, num_changes, closed_at, id } = changesetDetails;
 
   const infoFeedElement = document.querySelector("#info-feed")
 
   if (!infoFeedElement) return;
 
   infoFeedElement.innerHTML = `
-  <span class='change-info'> ${user} (${num_changes} changes) - ${closed_at ? new Date(closed_at) : ""
-    } 
+  <span 
+    class='change-info'>
+    ${num_changes} changes by 
+    <a 
+      href='https://www.openstreetmap.org/user/${user}' 
+      target="_blank" 
+      rel="noopener noreferrer">
+      ${user}</a> |
+    <a href='https://www.openstreetmap.org/changeset/${id}' target="_blank" rel="noopener noreferrer"> view changes </a> 
+    <br/> closed at ${closed_at ? new Date(closed_at) : ""}
+   
   </span>  
 `;
 };
@@ -64,8 +73,8 @@ const newChangeSetCallBack = (changeset: Changeset) => {
 
   const marker: L.Marker = L.marker([min_lat, max_lon], { icon })
     .bindPopup(`
-      ${user} - (${num_changes} changes)   
-      <div> <a href='https://www.openstreetmap.org/changeset/${id}' target="_blank" rel="noopener noreferrer"> View changes </a>  </div>
+      ${num_changes} changes by <a href='https://www.openstreetmap.org/user/${user}' target="_blank" rel="noopener noreferrer">${user}</a>
+      <div><a href='https://www.openstreetmap.org/changeset/${id}' target="_blank" rel="noopener noreferrer"> View changes </a></div>
       `)
     .addEventListener('mouseover', () => marker.togglePopup())
     .addEventListener('mouseout', () => marker.togglePopup())
