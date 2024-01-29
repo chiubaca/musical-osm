@@ -43,7 +43,8 @@ const addToInfoFeed = (changesetDetails: Changeset) => {
 
   infoFeedElement.innerHTML = `
   <span class='change-info'> ${user} (${num_changes} changes) - ${closed_at ? new Date(closed_at) : ""
-    } </span>  
+    } 
+  </span>  
 `;
 };
 
@@ -53,7 +54,7 @@ const addToInfoFeed = (changesetDetails: Changeset) => {
  */
 const newChangeSetCallBack = (changeset: Changeset) => {
   const {
-    user, min_lat, max_lon, num_changes
+    user, min_lat, max_lon, num_changes, id
   } = changeset;
 
   const icon = L.divIcon({
@@ -62,7 +63,10 @@ const newChangeSetCallBack = (changeset: Changeset) => {
   });
 
   const marker: L.Marker = L.marker([min_lat, max_lon], { icon })
-    .bindPopup(`${user} - (${num_changes} changes)`)
+    .bindPopup(`
+      ${user} - (${num_changes} changes)   
+      <div> <a href='https://www.openstreetmap.org/changeset/${id}' target="_blank" rel="noopener noreferrer"> View changes </a>  </div>
+      `)
     .addEventListener('mouseover', () => marker.togglePopup())
     .addEventListener('mouseout', () => marker.togglePopup())
     .addTo(map);
