@@ -7,16 +7,16 @@ import { ChangeSetResp, Changeset } from './common/types';
  * Nice sounding chords taken from https://codepen.io/teropa/pen/mBbPEe
  */
 const SCALES = [
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-G2.mp3'),
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-A2.mp3'),
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-C3.mp3'),
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-D3.mp3'),
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-E3.mp3'),
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-E4.mp3'),
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-G3.mp3'),
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-A3.mp3'),
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-C4.mp3'),
-  new Audio('https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/scale-D4.mp3'),
+  new Audio('chords/scale-A2.mp3'),
+  new Audio('chords/scale-G2.mp3'),
+  new Audio('chords/scale-C3.mp3'),
+  new Audio('chords/scale-D3.mp3'),
+  new Audio('chords/scale-E3.mp3'),
+  new Audio('chords/scale-E4.mp3'),
+  new Audio('chords/scale-G3.mp3'),
+  new Audio('chords/scale-A3.mp3'),
+  new Audio('chords/scale-C4.mp3'),
+  new Audio('chords/scale-D4.mp3'),
 ];
 
 const ONE_MIN = 60000;
