@@ -2,21 +2,19 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './style.scss';
 import { ChangeSetResp, Changeset } from './common/types';
+import { A2, G2, C3, D3, E3, E4, G3, A3, C4, D4 } from './chords'
 
-/**
- * Nice sounding chords taken from https://codepen.io/teropa/pen/mBbPEe
- */
 const SCALES = [
-  new Audio('chords/scale-A2.mp3'),
-  new Audio('chords/scale-G2.mp3'),
-  new Audio('chords/scale-C3.mp3'),
-  new Audio('chords/scale-D3.mp3'),
-  new Audio('chords/scale-E3.mp3'),
-  new Audio('chords/scale-E4.mp3'),
-  new Audio('chords/scale-G3.mp3'),
-  new Audio('chords/scale-A3.mp3'),
-  new Audio('chords/scale-C4.mp3'),
-  new Audio('chords/scale-D4.mp3'),
+  new Audio(A2),
+  new Audio(G2),
+  new Audio(C3),
+  new Audio(D3),
+  new Audio(E3),
+  new Audio(E4),
+  new Audio(G3),
+  new Audio(A3),
+  new Audio(C4),
+  new Audio(D4),
 ];
 
 const ONE_MIN = 60000;
@@ -129,6 +127,7 @@ const main = async () => {
     // Get the initial changeset for when the app loads
     getLatestChangeset()
 
+    // Get a fresh changeset every 30 seconds 
     setInterval(async () => {
       getLatestChangeset()
     }, ONE_MIN / 2);
