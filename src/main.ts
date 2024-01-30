@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import './style.scss';
+// import './style.scss';
 import { ChangeSetResp, Changeset } from './common/types';
 import { A2, G2, C3, D3, E3, E4, G3, A3, C4, D4 } from './chords'
 
