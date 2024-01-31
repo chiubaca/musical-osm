@@ -42,8 +42,7 @@ const addToInfoFeed = (changesetDetails: Changeset) => {
   if (!infoFeedElement) return;
 
   infoFeedElement.innerHTML = `
-  <span 
-    class='change-info'>
+  <span class="change-info">
     ${num_changes} changes by 
     <a 
       href='https://www.openstreetmap.org/user/${user}' 
@@ -52,7 +51,6 @@ const addToInfoFeed = (changesetDetails: Changeset) => {
       ${user}</a> |
     <a href='https://www.openstreetmap.org/changeset/${id}' target="_blank" rel="noopener noreferrer"> view changes </a> 
     <br/> closed at ${closed_at ? new Date(closed_at) : ""}
-   
   </span>  
 `;
 };
