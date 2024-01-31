@@ -1,27 +1,32 @@
-html * {
-  padding: 0;
+html,
+body {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+html * {
   font-family: monospace;
 }
 
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-#title { 
-  position: absolute;
-  top : 20px;
-  left : 20px;
-  z-index: 402;
-  color: aliceblue;
+#mapid {
+  background: #262626;
+  height: 100%;
+  width: 100%;
 }
 
-#info-button { 
+#title {
   position: absolute;
-  top : 10px;
-  right : 10px;
+  left: 10px;
+  z-index: 402;
+  color: white;
+}
+
+#info-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
   z-index: 999;
   text-decoration: none;
 }
@@ -78,23 +83,22 @@ html * {
   }
 }
 
-#mapid { height: 100vh; }
-
 #info-feed {
+  color:white;
   position: absolute;
-  left : 20px;
-  bottom: 20px;
+  left: 10px;
+  bottom: 40px;
   z-index: 401;
-  color: aliceblue;
 
   a {
     color: white;
   }
 }
 
-.change-info{
+.change-info {
   animation: fadein 1s;
   text-align: start;
+  color:white;
 }
 
 /* Adapted from https://loading.io/css/ */
@@ -132,6 +136,10 @@ html * {
   animation: fadein 2s;
 }
 @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
